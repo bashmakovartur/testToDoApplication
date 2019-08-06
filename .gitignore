@@ -1,0 +1,11 @@
+node_modules
+__benchmarks__
+build/
+.module-cache
+fixtures/dom/public/react-dom.js
+fixtures/dom/public/react.js
+*.log*
+*.sublime-project
+*.sublime-workspace
+.idea
+.vscode
