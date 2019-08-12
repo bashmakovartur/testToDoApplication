@@ -39,6 +39,7 @@ export const TaskArea = styled.textarea`
   box-sizing: border-box;
   border-radius: 5px;
   resize: none;
+  cursor: ${props => (props.readOnly ? "default" : "text")};
 `;
 
 export const Label = styled.label``;
@@ -51,14 +52,16 @@ export const Deadline = styled.input`
 
 export const BottomBlocksWrapper = styled.div`
   display: flex;
-  height: 120px;
+  height: ${props => (props.view ? "160px" : "120px")};
 `;
 
 export const BottomBlock = styled.div`
   display: flex;
-  flex-direction: ${props => (props.right ? "column" : "row")};
+  flex-direction: column;
   width: 50%;
   margin: ${props => (props.right ? "unset" : "auto")};
   justify-content: ${props => (props.right ? "space-around" : "unset")};
   align-items: ${props => (props.right ? "center" : "unset")};
 `;
+
+export const Paragraph = styled.p``;

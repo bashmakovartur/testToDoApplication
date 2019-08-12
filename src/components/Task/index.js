@@ -1,14 +1,27 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { TaskRow, TaskCell } from "./styles";
 
 const Task = props => {
+  const taskId = Object.keys(props.info)[0];
+  const { create, taskText, deadLine, actual, completed } = props.info[taskId];
+  const { openPopup } = props;
+  const rowOnClickHandler = () => {
+    openPopup({ type: `view_${taskId}` });
+  };
+
   return (
-    <TaskRow>
-      <TaskCell main>{props.children}</TaskCell>
-      <TaskCell>{props.children}</TaskCell>
-      <TaskCell>{props.children}</TaskCell>
+    <TaskRow actual={actual} completed={completed} onClick={rowOnClickHandler}>
+      <TaskCell main>{taskText}</TaskCell>
+      <TaskCell>{create}</TaskCell>
+      <TaskCell>{deadLine}</TaskCell>
     </TaskRow>
   );
+};
+
+Task.propTypes = {
+  info: PropTypes.object,
+  openPopup: PropTypes.func
 };
 
 export default Task;

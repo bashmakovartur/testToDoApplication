@@ -7,6 +7,7 @@ export const Page = styled.section`
   width: 100%;
   height: 100vh;
   background: lightgray;
+  overflow: hidden;
 `;
 
 export const Wrapper = styled.section`
@@ -20,6 +21,7 @@ export const Wrapper = styled.section`
   background: white;
   box-sizing: border-box;
   cursor: default;
+  overflow: hidden;
 
   @media screen and (orientation: landscape) and (max-height: 500px) {
     height: 100%;

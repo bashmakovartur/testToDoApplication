@@ -18,6 +18,8 @@ const stylesByLocation = {
 export const Btn = styled.button(props =>
   Object.assign({}, stylesByLocation[props.location], {
     cursor: "pointer",
-    "border-radius": "5px"
+    "border-radius": "5px",
+    "pointer-events": `${props.active ? "unset" : "none"}`,
+    opacity: `${props.active ? "1" : "0.4"}`
   })
 );

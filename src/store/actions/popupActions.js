@@ -1,9 +1,9 @@
 import { OPEN_POPUP, CLOSE_POPUP } from "../constants";
 
-export const openPopup = type => {
+export const openPopup = data => {
   return {
     type: OPEN_POPUP,
-    payload: type
+    payload: data.type
   };
 };
 

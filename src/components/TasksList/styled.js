@@ -1,8 +1,13 @@
 import styled from "styled-components";
 
-export const Table = styled.div``;
+export const Table = styled.div`
+  height: calc(100% - 192px);
+  overflow: auto;
+`;
 
 export const TableHeader = styled.div`
+  position: sticky;
+  top: 0;
   display: flex;
   border-bottom: 1px solid lightgrey;
   background: skyblue;
