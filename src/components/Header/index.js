@@ -82,7 +82,7 @@ class Header extends Component {
 const mapStateToProps = store => {
   return {
     popupState: store.popupReducer.isPopupOpen,
-    tasksList: store.taskOptions.tasksList
+    tasksList: store.taskReducer.tasksList
   };
 };
 

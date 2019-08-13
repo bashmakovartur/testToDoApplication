@@ -2,8 +2,13 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { closePopup } from "../../store/actions/popupActions";
-import { addTask, removeTask } from "../../store/actions/taskAtions";
+import { openPopup, closePopup } from "../../store/actions/popupActions";
+import {
+  addTask,
+  removeTask,
+  completeTask,
+  saveChangedTask
+} from "../../store/actions/taskAtions";
 import Button from "../Button";
 import {
   PopupWrapper,
@@ -47,9 +52,9 @@ class TaskPopup extends Component {
   };
 
   getTask = id => {
-    const { taskList } = this.props;
+    const { tasksList } = this.props;
 
-    return taskList.filter(el => !!el[id]);
+    return tasksList.filter(el => !!el[id]);
   };
 
   getTaskStatus = (isActual, isCompleted) => {
@@ -78,6 +83,7 @@ class TaskPopup extends Component {
       this.setState({
         deadLine: now.toISOString().split("T")[0]
       });
+
       return;
     }
 
@@ -89,14 +95,17 @@ class TaskPopup extends Component {
   isSaveButtonActive = () =>
     this.state.taskText && this.state.deadLine ? true : false;
 
-  buildCreatePopup = () => {
-    const { addTask, closePopup } = this.props;
+  buildCreatePopup = (changedTask = null) => {
+    const { addTask, closePopup, saveChangedTask } = this.props;
+    const { taskText, deadLine } = this.state;
+    const task = changedTask && changedTask[0];
 
     return (
       <>
-        <Title>Создайте задачу</Title>
+        <Title>{task ? "Задача будет изменена" : "Создайте задачу"}</Title>
         <TaskArea
           onChange={this.onChangeTextAreaHandler}
+          defaultValue={task ? task[Object.keys(task)].taskText : taskText}
           placeholder="Что надо сделать?"
         />
         <BottomBlocksWrapper>
@@ -105,7 +114,7 @@ class TaskPopup extends Component {
               Дедлайн
               <Deadline
                 type="date"
-                value={this.state.deadLine}
+                value={deadLine}
                 onChange={this.onChangeDeadLine}
               />
             </Label>
@@ -114,9 +123,13 @@ class TaskPopup extends Component {
             <Button
               location="popup"
               title="Сохранить"
-              forwardedData={this.state}
+              forwardedData={
+                task
+                  ? { ...this.state, taskId: Object.keys(task)[0] }
+                  : this.state
+              }
               active={this.isSaveButtonActive()}
-              clickAction={addTask}
+              clickAction={task ? saveChangedTask : addTask}
             />
             <Button location="popup" title="Закрыть" clickAction={closePopup} />
           </BottomBlock>
@@ -126,7 +139,7 @@ class TaskPopup extends Component {
   };
 
   buildViewPopup = task => {
-    const { closePopup, removeTask } = this.props;
+    const { closePopup, removeTask, completeTask, changeTask } = this.props;
     const taskId = Object.keys(task[0])[0];
     const { create, taskText, deadLine, actual, completed } = task[0][taskId];
     const taskStatus = this.getTaskStatus(actual, completed);
@@ -154,14 +167,14 @@ class TaskPopup extends Component {
                 <Button
                   location="popup"
                   title="Изменить"
-                  // forwardedData={this.state}
-                  // active={this.isSaveButtonActive()}
-                  // clickAction={this.props.addTask}
+                  forwardedData={{ type: `change__${taskId}` }}
+                  clickAction={changeTask}
                 />
                 <Button
                   location="popup"
                   title="Выполнить"
-                  // clickAction={this.props.closePopup}
+                  forwardedData={{ taskId }}
+                  clickAction={completeTask}
                 />
               </>
             )}
@@ -178,37 +191,31 @@ class TaskPopup extends Component {
     );
   };
 
-  buildEditPopup = task => {
-    debugger;
-  };
-
   getPopup = type => {
     if (type === "create") {
       return this.templatePopup(this.buildCreatePopup());
     }
 
-    let popupTypeWithId = type.split("_");
+    let popupTypeWithId = type.split("__");
+    let popupBody;
 
     if (popupTypeWithId[0] === "view") {
-      const popupBody = this.buildViewPopup(
-        this.getTask(popupTypeWithId.slice(1).join("_"))
+      popupBody = this.buildViewPopup(
+        this.getTask(popupTypeWithId.slice(1).join("__"))
       );
-
-      return this.templatePopup(popupBody);
     }
 
-    // switch (type) {
-    //   case "create":
-    //     return this.templatePopup(this.buildCreatePopup());
-    //   case "view":
-    //     return this.templatePopup(this.buildViewPopup());
-    //   case "edit":
-    //     return this.buildEditPopup();
-    // }
+    if (popupTypeWithId[0] === "change") {
+      popupBody = this.buildCreatePopup(
+        this.getTask(popupTypeWithId.slice(1).join("__"))
+      );
+    }
+
+    return this.templatePopup(popupBody);
   };
 
   render() {
-    const { popupType, tasksList } = this.props;
+    const { popupType } = this.props;
     const popupBlock = document.getElementById("popup");
 
     return ReactDOM.createPortal(this.getPopup(popupType), popupBlock);
@@ -217,13 +224,19 @@ class TaskPopup extends Component {
 
 TaskPopup.propTypes = {
   popupType: PropTypes.string,
-  tasksList: PropTypes.arrayOf(PropTypes.object)
+  tasksList: PropTypes.arrayOf(PropTypes.object),
+  closePopup: PropTypes.func,
+  addTask: PropTypes.func,
+  removeTask: PropTypes.func,
+  completeTask: PropTypes.func,
+  changeTask: PropTypes.func,
+  saveChangedTask: PropTypes.func
 };
 
 const mapStateToProps = store => {
   return {
     popupType: store.popupReducer.popupType,
-    taskList: store.taskOptions.tasksList
+    tasksList: store.taskReducer.tasksList
   };
 };
 
@@ -236,6 +249,18 @@ const mapDispatchToProps = dispatch => {
     },
     removeTask: info => {
       dispatch(removeTask(info));
+      dispatch(closePopup());
+    },
+    completeTask: info => {
+      dispatch(completeTask(info));
+      dispatch(closePopup());
+    },
+    changeTask: info => {
+      dispatch(closePopup());
+      dispatch(openPopup(info));
+    },
+    saveChangedTask: info => {
+      dispatch(saveChangedTask(info));
       dispatch(closePopup());
     }
   };

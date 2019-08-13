@@ -7,7 +7,7 @@ const Task = props => {
   const { create, taskText, deadLine, actual, completed } = props.info[taskId];
   const { openPopup } = props;
   const rowOnClickHandler = () => {
-    openPopup({ type: `view_${taskId}` });
+    openPopup({ type: `view__${taskId}` });
   };
 
   return (

@@ -1,10 +1,10 @@
 import { combineReducers } from "redux";
-import taskOptions from "./taskOptions";
+import taskReducer from "./taskReducer";
 import taskSort from "./tasksSort";
 import popupReducer from "./popupReducer";
 
 export const rootReducer = combineReducers({
-  taskOptions,
+  taskReducer,
   taskSort,
   popupReducer
 });

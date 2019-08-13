@@ -35,7 +35,7 @@ TasksList.propTypes = {
 
 const mapStateToProps = store => {
   return {
-    tasksList: store.taskOptions.tasksList
+    tasksList: store.taskReducer.tasksList
   };
 };
 
