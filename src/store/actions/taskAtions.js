@@ -3,8 +3,9 @@ import {
   REMOVE_TASK,
   REMOVE_ALL_TASKS,
   COMPLETE_TASK,
-  CHANGE_TASK,
-  SAVE_CHANGED_TASK
+  SAVE_CHANGED_TASK,
+  SORT_TASKS,
+  LOAD_TEST_LIST
 } from "../constants";
 
 export const addTask = info => {
@@ -35,16 +36,23 @@ export const completeTask = info => {
   };
 };
 
-// export const changeTask = () => {
-//   return {
-//     type: CHANGE_TASK,
-//     payload: ""
-//   };
-// };
-
 export const saveChangedTask = info => {
   return {
     type: SAVE_CHANGED_TASK,
     payload: info
+  };
+};
+
+export const sortTasks = () => {
+  return {
+    type: SORT_TASKS,
+    payload: ""
+  };
+};
+
+export const loadTestList = () => {
+  return {
+    type: LOAD_TEST_LIST,
+    payload: ""
   };
 };

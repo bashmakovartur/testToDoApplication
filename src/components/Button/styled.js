@@ -12,6 +12,14 @@ const stylesByLocation = {
     height: "30px",
     background: "lightgrey",
     border: "1px solid dimgrey"
+  },
+  table: {
+    display: "block",
+    width: "170px",
+    height: "50px",
+    margin: " 30px auto",
+    background: "lightgrey",
+    border: "1px solid dimgrey"
   }
 };
 

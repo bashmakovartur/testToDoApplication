@@ -10,6 +10,12 @@ export const REMOVE_ALL_TASKS = "REMOVE_ALL_TASKS";
 
 export const COMPLETE_TASK = "COMPLETE_TASK";
 
-export const CHANGE_TASK = "CHANGE_TASK";
-
 export const SAVE_CHANGED_TASK = "SAVE_CHANGED_TASK";
+
+export const SORT_TASKS = "SORT_TASKS";
+
+export const LOAD_TEST_LIST = "LOAD_TEST_LIST";
+
+export const DIRECT = "DIRECT";
+
+export const REVERSE = "REVERSE";

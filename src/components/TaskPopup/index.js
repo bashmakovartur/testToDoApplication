@@ -58,7 +58,7 @@ class TaskPopup extends Component {
   };
 
   getTaskStatus = (isActual, isCompleted) => {
-    if (isActual && isCompleted) {
+    if (isCompleted) {
       return { status: "comleted", title: "Задача выполнена" };
     }
     if (isActual) {
