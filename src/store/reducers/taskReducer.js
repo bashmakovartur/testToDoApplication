@@ -224,10 +224,7 @@ const taskReducer = (state = initialState, action) => {
         addToLocalStorage(Object.keys(el)[0], el[Object.keys(el)[0]]);
       });
 
-      return {
-        tasksList: getSortTasks(testList, REVERSE),
-        sortType: REVERSE
-      };
+      return getTasks();
     }
     default:
       return state;
